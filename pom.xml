@@ -151,7 +151,7 @@
                 <artifactId>exec-maven-plugin</artifactId>
                 <version>1.2.1</version>
                 <configuration>
-                    <mainClass>camely.CamelyApp</mainClass>
+                    <mainClass>camely.JavaToScala</mainClass>
                 </configuration>
             </plugin>
 

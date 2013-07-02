@@ -1,4 +1,4 @@
-package camely;
+package javaToScala;
 
 import javax.inject.Named;
 import java.util.concurrent.atomic.AtomicLong;

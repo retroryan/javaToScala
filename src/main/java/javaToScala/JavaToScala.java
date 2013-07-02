@@ -1,10 +1,6 @@
-package camely;
+package javaToScala;
 
 
-import akka.actor.ActorRef;
-import akka.actor.ActorSystem;
-import camely.camelHttp.HttpConsumer;
-import camely.camelHttp.HttpProducer;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import java.io.BufferedReader;
@@ -14,9 +10,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 
-import static camely.SpringExtension.SpringExtProvider;
-
-public class CamelyApp {
+public class JavaToScala {
 
     final Pattern msgPattern = Pattern
             .compile("(?:m|M)\\s+(.++)");
@@ -24,43 +18,20 @@ public class CamelyApp {
     final Pattern countPattern = Pattern.compile("(?:c|count)");
 
     public static void main(String[] args) throws Exception {
-        CamelyApp camelyApp = new CamelyApp();
-        camelyApp.initSpring();
+        JavaToScala javaToScala = new JavaToScala();
+        javaToScala.initSpring();
     }
 
     private void initSpring() throws Exception {
         // create a spring context and scan the classes
         AnnotationConfigApplicationContext ctx =
                 new AnnotationConfigApplicationContext();
-        ctx.scan("camely");
+        ctx.scan("javaToScala");
         ctx.refresh();
 
-        // get hold of the actor system
-        ActorSystem system = ctx.getBean(ActorSystem.class);
-
-        // use the Spring Extension to create props for the named actor bean
-        ActorRef counter = system.actorOf(
-                SpringExtProvider.get(system).props("CountingActor"), "counter");
-
-
-        //Because we are passing the actor ref, the other bean properties don't get looked up by Spring.  Not sure how to mix
-        //passing constructor args with bean injection?
-        MessageReplacementService messageReplacementService = ctx.getBean(MessageReplacementService.class);
-        ActorRef httpTransformer = system.actorOf(
-                SpringExtProvider.get(system).props("HttpTransformer", messageReplacementService, counter), "httpTransformer");
-
-        final ActorRef httpProducer = system.actorOf(HttpProducer.mkProps(httpTransformer));
-
-        //the consumer is what actually listens for the http requests
-        final ActorRef httpConsumer = system.actorOf(HttpConsumer.mkProps(httpProducer));
-
         CountingService countingService = ctx.getBean(CountingService.class);
-        try {
-            commandLoop(countingService, messageReplacementService);
-        } finally {
-            system.shutdown();
-            system.awaitTermination();
-        }
+        MessageReplacementService messageReplacementService = ctx.getBean(MessageReplacementService.class);
+        commandLoop(countingService, messageReplacementService);
     }
 
     protected void commandLoop(CountingService countingService, MessageReplacementService messageReplacementService) throws IOException {
@@ -80,7 +51,7 @@ public class CamelyApp {
                     System.out.println("replacement message set to " + newMessage);
                 } else if (countMatcher.find()) {
                     long count = countingService.getCount();
-                    System.out.println("current count: " + count);
+                    System.out.println(messageReplacementService.getReplacementMessage() + " [" + count +"]");
                 } else if (quitMatcher.find()) {
                     finished = true;
                 } else {

@@ -1,4 +1,4 @@
-package camely;
+package javaToScala;
 
 import javax.inject.Named;
 import java.util.concurrent.atomic.AtomicLong;
@@ -9,7 +9,7 @@ import java.util.concurrent.atomic.AtomicLong;
 @Named("MessageReplacementService")
 public class MessageReplacementService {
 
-    private String replacementMessage = "SUPER AKKA!";
+    private String replacementMessage = "SUPER JAVA!";
 
     public String getReplacementMessage() {
         return replacementMessage;
