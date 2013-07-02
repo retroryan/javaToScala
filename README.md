@@ -1,19 +1,11 @@
-Sample showing Spring, Akka and Camel working together
+Sample showing transitioning from Java to Scala working together
 -------------
 
 To run this from the command prompt with maven use:
 
 mvn install exec:java -DskipTests
 
-Then in your browser go to:
-http://localhost:8875/
-
-Notice how the word Akka (not the image) has been replaced with SUPER AKKA along with the count of the times the web page has been hit.
-
 At the command line the following options are available:
-* m 'new message'   #set a new message that is used to replace the word Akka.
-* c                 #get a count of how many times the web page has been hit
+* m 'new message'   #set a new message that is used whenever the count is requested.
+* c                 #get a count of how many times the new message has been displayed
 * q                 #quit
-
-
-The Spring Extension and Spring Actor Producer where originally written by Björn Antonsson @bantonsson
