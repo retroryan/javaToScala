@@ -3,9 +3,9 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>camely</groupId>
-    <artifactId>CamelySample</artifactId>
-    <name>Camely</name>
+    <groupId>javaToScala</groupId>
+    <artifactId>JavaToScala</artifactId>
+    <name>JavaToScala</name>
     <version>1.0</version>
     <packaging>jar</packaging>
 
@@ -17,39 +17,6 @@
         <com.typesafe.akka.version>2.2.0-RC1</com.typesafe.akka.version>
     </properties>
     <dependencies>
-
-        <!-- Akka -->
-        <dependency>
-            <groupId>com.typesafe.akka</groupId>
-            <artifactId>akka-actor_2.10</artifactId>
-            <version>${com.typesafe.akka.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.typesafe.akka</groupId>
-            <artifactId>akka-slf4j_2.10</artifactId>
-            <version>${com.typesafe.akka.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.typesafe.akka</groupId>
-            <artifactId>akka-testkit_2.10</artifactId>
-            <version>${com.typesafe.akka.version}</version>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>com.typesafe.akka</groupId>
-            <artifactId>akka-camel_2.10</artifactId>
-            <version>${com.typesafe.akka.version}</version>
-        </dependency>
-
-
-        <dependency>
-            <groupId>com.typesafe.akka</groupId>
-            <artifactId>akka-kernel_2.10</artifactId>
-            <version>${com.typesafe.akka.version}</version>
-        </dependency>
 
         <!-- Logging -->
         <dependency>
@@ -96,19 +63,6 @@
             <version>1.7</version>
         </dependency>
 
-
-        <dependency>
-            <groupId>org.apache.camel</groupId>
-            <artifactId>camel-core</artifactId>
-            <version>2.10.4</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.camel</groupId>
-            <artifactId>camel-jetty</artifactId>
-            <version>2.10.4</version>
-        </dependency>
-
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context</artifactId>
@@ -121,18 +75,33 @@
             <version>1</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.scala-lang</groupId>
+            <artifactId>scala-library</artifactId>
+            <version>2.10.2</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.scala-lang</groupId>
+            <artifactId>scala-library</artifactId>
+            <version>2.10.2</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.scalatest</groupId>
+            <artifactId>scalatest_2.10</artifactId>
+            <version>1.9.1</version>
+            <scope>test</scope>
+        </dependency>
+
     </dependencies>
 
-    <repositories>
-
-        <repository>
-            <id>apache</id>
-            <name>Apache</name>
-            <url>repo1.maven.org/maven2/</url>
-            <layout>default</layout>
-        </repository>
-
-    </repositories>
+    <pluginRepositories>
+        <pluginRepository>
+            <id>oss.sonatype.org</id>
+            <url>https://oss.sonatype.org/content/groups/public/</url>
+        </pluginRepository>
+    </pluginRepositories>
 
     <build>
         <plugins>
@@ -151,10 +120,51 @@
                 <artifactId>exec-maven-plugin</artifactId>
                 <version>1.2.1</version>
                 <configuration>
-                    <mainClass>camely.JavaToScala</mainClass>
+                    <mainClass>javaToScala.JavaToScala</mainClass>
                 </configuration>
             </plugin>
-
+            <plugin>
+                <groupId>net.alchim31.maven</groupId>
+                <artifactId>scala-maven-plugin</artifactId>
+                <version>3.1.5</version>
+                <executions>
+                    <execution>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>compile</goal>
+                            <goal>testCompile</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <!-- disable surefire -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.7</version>
+                <configuration>
+                    <skipTests>true</skipTests>
+                </configuration>
+            </plugin>
+            <!-- enable scalatest -->
+            <plugin>
+                <groupId>org.scalatest</groupId>
+                <artifactId>maven-scalatest-plugin</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <configuration>
+                    <reportsDirectory>${project.build.directory}/surefire-reports</reportsDirectory>
+                    <junitxml>.</junitxml>
+                    <filereports>WDF TestSuite.txt</filereports>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>test</id>
+                        <goals>
+                            <goal>test</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
 </project>

@@ -1,13 +1,15 @@
 package javaToScala;
 
-import javax.inject.Named;
-import java.util.concurrent.atomic.AtomicLong;
-
-/**
- * A simple spring service get and set the default replacement message.
- */
-@Named("MessageReplacementService")
 public class MessageReplacementService {
+
+    public static final MessageReplacementService MESSAGE_REPLACEMENT_SERVICE = new MessageReplacementService();
+
+    public static MessageReplacementService getInstance() {
+        return MESSAGE_REPLACEMENT_SERVICE;
+    }
+
+    private MessageReplacementService() {
+    }
 
     private String replacementMessage = "SUPER JAVA!";
 
@@ -17,5 +19,11 @@ public class MessageReplacementService {
 
     public void setReplacementMessage(String replacementMessage) {
         this.replacementMessage = replacementMessage;
+    }
+
+    public String getNextMessage() {
+        long count = CountingService.getInstance().getCount();
+        CountingService.getInstance().increment();
+        return getReplacementMessage() + " [" + count + "]";
     }
 }

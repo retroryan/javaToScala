@@ -1,13 +1,19 @@
 package javaToScala;
 
-import javax.inject.Named;
 import java.util.concurrent.atomic.AtomicLong;
 
-/**
- * A simple spring service that keeps a counter.
- */
-@Named("CountingService")
+
 public class CountingService {
+
+
+    public static final CountingService COUNTING_SERVICE = new CountingService();
+
+    public static CountingService getInstance() {
+        return COUNTING_SERVICE;
+    }
+
+    private CountingService() {
+    }
 
     private final AtomicLong counter = new AtomicLong(0);
 

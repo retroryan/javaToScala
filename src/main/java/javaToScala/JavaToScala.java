@@ -18,23 +18,10 @@ public class JavaToScala {
     final Pattern countPattern = Pattern.compile("(?:c|count)");
 
     public static void main(String[] args) throws Exception {
-        JavaToScala javaToScala = new JavaToScala();
-        javaToScala.initSpring();
+        new JavaToScala().commandLoop();
     }
 
-    private void initSpring() throws Exception {
-        // create a spring context and scan the classes
-        AnnotationConfigApplicationContext ctx =
-                new AnnotationConfigApplicationContext();
-        ctx.scan("javaToScala");
-        ctx.refresh();
-
-        CountingService countingService = ctx.getBean(CountingService.class);
-        MessageReplacementService messageReplacementService = ctx.getBean(MessageReplacementService.class);
-        commandLoop(countingService, messageReplacementService);
-    }
-
-    protected void commandLoop(CountingService countingService, MessageReplacementService messageReplacementService) throws IOException {
+    protected void commandLoop() throws IOException {
         InputStreamReader isr = new InputStreamReader(System.in);
         BufferedReader reader = new BufferedReader(isr);
         try {
@@ -47,11 +34,11 @@ public class JavaToScala {
 
                 if (msgMatcher.find()) {
                     String newMessage = msgMatcher.group(1);
-                    messageReplacementService.setReplacementMessage(newMessage);
+                    MessageReplacementService.getInstance().setReplacementMessage(newMessage);
                     System.out.println("replacement message set to " + newMessage);
                 } else if (countMatcher.find()) {
-                    long count = countingService.getCount();
-                    System.out.println(messageReplacementService.getReplacementMessage() + " [" + count +"]");
+                    String nextMessage = MessageReplacementService.getInstance().getNextMessage();
+                    System.out.println("nextMessage = " + nextMessage);
                 } else if (quitMatcher.find()) {
                     finished = true;
                 } else {
