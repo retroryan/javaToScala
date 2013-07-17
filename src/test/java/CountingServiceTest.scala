@@ -1,16 +1,19 @@
 import javaToScala.CountingService
-import org.scalatest._
-import org.scalatest.matchers.ShouldMatchers
+import org.junit.Test
 
-class CountingServiceSpec extends FlatSpec with ShouldMatchers {
+//import all of the asserts from the Assert class.
+import org.junit.Assert._
 
-  "The counting service" should "increment values" in {
+class CountingServiceTest {
 
+  @Test
+  def testCountingService() = {
     //scala infers the type of this variable to be a CountingService, so we don't have to declare the type
     val countingService = CountingService.getInstance()
     countingService.increment()
     countingService.increment()
 
-    countingService.getCount should equal (2)
+    assertSame("The count should be 2", countingService.getCount, 2L)
+
   }
 }
